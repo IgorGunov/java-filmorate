@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,13 +47,8 @@ public class UserController {
             log.warn("Как живется в будущем ?");
             throw new ValidationException("Как живется в будущем ?");
         } else if (user.getLogin().contains(" ")) {
+            log.warn("Логин содержит пробел");
             throw new ValidationException("Логин содержит пробел");
-        }
-    }
-
-    public class ValidationException extends Exception {
-        public ValidationException(String message) {
-            super(message);
         }
     }
 }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.Valid;
+import javax.validation.ValidationException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -46,12 +47,6 @@ public class FilmController {
         } else if (film.getDescription().length() > 200) {
             log.warn("Произошла ошибка валидации при создании фильма");
             throw new ValidationException("Описание слишком велико");
-        }
-    }
-
-    public class ValidationException extends Exception {
-        public ValidationException(String message) {
-            super(message);
         }
     }
 }
