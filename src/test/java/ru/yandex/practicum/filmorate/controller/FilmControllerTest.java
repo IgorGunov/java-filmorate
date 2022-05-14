@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,10 +12,10 @@ class FilmControllerTest {
 
     @Test
     public void notCorrectDuration() {
-        Film film =  Film.builder()
+        Film film = Film.builder()
                 .name("name")
                 .description("description")
-                .releaseDate(LocalDate.of(2020,02,02))
+                .releaseDate(LocalDate.of(2020, 02, 02))
                 .duration(0)
                 .build();
 
@@ -26,10 +25,10 @@ class FilmControllerTest {
 
     @Test
     public void notCorrectData() {
-        Film film =  Film.builder()
+        Film film = Film.builder()
                 .name("name")
                 .description("description")
-                .releaseDate(LocalDate.of(800,02,02))
+                .releaseDate(LocalDate.of(800, 02, 02))
                 .duration(100)
                 .build();
 
@@ -39,18 +38,17 @@ class FilmControllerTest {
 
     @Test
     public void notCorrectDescription() {
-        Film film =  Film.builder()
+        Film film = Film.builder()
                 .name("name")
                 .description("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" +
                         "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" +
                         "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" +
                         "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
-                .releaseDate(LocalDate.of(2020,02,02))
+                .releaseDate(LocalDate.of(2020, 02, 02))
                 .duration(100)
                 .build();
 
         ValidationException ex = assertThrows(ValidationException.class, () -> filmController.create(film));
         assertEquals("Описание слишком велико", ex.getMessage());
     }
-
 }

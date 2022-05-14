@@ -24,7 +24,7 @@ public class UserController {
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-        validation(user);
+        checkInput(user);
         user.setId();
         users.put(user.getId(), user);
         log.info("Добавлен пользователь");
@@ -36,13 +36,13 @@ public class UserController {
         if (user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
-        validation(user);
+        checkInput(user);
         users.put(user.getId(), user);
         log.info("Добавлен пользователь");
         return user;
     }
 
-    public void validation(User user) throws ValidationException {
+    private void checkInput(User user) throws ValidationException {
         if (user.getBirthday().isAfter(LocalDate.now())) {
             log.warn("Как живется в будущем ?");
             throw new ValidationException("Как живется в будущем ?");

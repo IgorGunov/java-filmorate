@@ -22,7 +22,7 @@ public class FilmController {
 
     @PostMapping(value = "/films")
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
-        validation(film);
+        checkInput(film);
         film.setId();
         films.put(film.getId(), film);
         log.info("Добавлен фильм ");
@@ -31,13 +31,13 @@ public class FilmController {
 
     @PutMapping(value = "/films")
     public Film update(@Valid  @RequestBody Film film) throws ValidationException {
-        validation(film);
+        checkInput(film);
         films.put(film.getId(), film);
         log.info("Добавлен фильм");
         return film;
     }
 
-    public void validation(Film film) throws ValidationException {
+    private void checkInput(Film film) throws ValidationException {
         if (film.getDuration() <= 0) {
             log.warn("Произошла ошибка валидации при создании фильма");
             throw new ValidationException("Продолжительность фильма не может быть отрицательной");
