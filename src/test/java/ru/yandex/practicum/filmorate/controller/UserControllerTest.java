@@ -1,14 +1,17 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.User;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Component
 class UserControllerTest {
 
-    private final UserController userController = new UserController();
+    @Autowired private UserController userController;
 
     @Test
     public void notCorrectEmail() {

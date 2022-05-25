@@ -1,14 +1,17 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Film;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Component
 class FilmControllerTest {
 
-    private final FilmController filmController = new FilmController();
+    @Autowired private FilmController filmController;
 
     @Test
     public void notCorrectDuration() {
@@ -18,6 +21,7 @@ class FilmControllerTest {
                 .releaseDate(LocalDate.of(2020, 02, 02))
                 .duration(0)
                 .build();
+        System.out.println(film);
 
         ValidationException ex = assertThrows(ValidationException.class, () -> filmController.create(film));
         assertEquals("Продолжительность фильма не может быть отрицательной", ex.getMessage());
