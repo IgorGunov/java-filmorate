@@ -11,7 +11,7 @@ import java.util.Set;
 @Builder
 public class Film {
     private static int idCounter = 1;
-    private static int id;
+    private int id;
     @NotBlank
     private final String name;
     @NotEmpty
@@ -19,10 +19,6 @@ public class Film {
     private final LocalDate releaseDate;
     private final int duration;
     private Set<Integer> likes;
-
-    public Set<Integer> getLikes() {
-        return likes;
-    }
 
     public void addLikes(int userId) {
         likes.add(userId);
@@ -34,9 +30,5 @@ public class Film {
 
     public void setId(){
         id = idCounter++;
-    }
-
-    public int getId(){
-        return id;
     }
 }

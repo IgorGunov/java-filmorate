@@ -1,43 +1,93 @@
 package ru.yandex.practicum.filmorate.service;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class UserService {
 
-    private final UserStorage userStorage;
+    @Autowired private UserStorage userStorage;
 
-    public UserService(UserStorage userStorage) {
-        this.userStorage = userStorage;
+    public User addFriend(int user, int friend) {
+        User userOne = userStorage.get(user);
+        User friendOne = userStorage.get(friend);
+
+        Set<Integer> setUser = new HashSet<>();
+        if (userOne.getFriends() != null) {
+            setUser = userOne.getFriends();
+        }
+        setUser.add(friend);
+        userOne.setFriends(setUser);
+
+        Set<Integer> setFriend = new HashSet<>();
+        if (friendOne.getFriends() != null) {
+            setFriend = friendOne.getFriends();
+        }
+        setFriend.add(user);
+        friendOne.setFriends(setFriend);
+
+        userStorage.update(friendOne);
+        userStorage.update(userOne);
+
+        return userOne;
     }
 
-    public void addFriend(int user, int friend) {
-        userStorage.getAllUser().get(user).addFriends(userStorage.getAllUser().get(friend));
-        userStorage.getAllUser().get(friend).addFriends(userStorage.getAllUser().get(user));
+    public User deleteFriend(int user, int friend) {
+        User userOne = userStorage.get(user);
+        User friendOne = userStorage.get(friend);
+
+        Set<Integer> setUser = new HashSet<>();
+        setUser = userOne.getFriends();
+        if (userOne.getFriends() != null) {
+            setUser = userOne.getFriends();
+        }
+        setUser.remove(friend);
+        userOne.setFriends(setUser);
+
+        Set<Integer> setFriend = new HashSet<>();
+        setFriend = friendOne.getFriends();
+        if (friendOne.getFriends() != null) {
+            setFriend = friendOne.getFriends();
+        }
+        setFriend.remove(user);
+        friendOne.setFriends(setFriend);
+
+        userStorage.update(friendOne);
+        userStorage.update(userOne);
+
+        return userOne;
     }
 
-    public void deleteFriend(int user, int friend) {
-        userStorage.getAllUser().get(user).deleteFriend(userStorage.getAllUser().get(friend));
-        userStorage.getAllUser().get(friend).deleteFriend(userStorage.getAllUser().get(user));
-    }
-
-    public Set<User> generalFriend(int id1, int id2) {
-        Set<User> generalFriend = null;
-        for (User user1: userStorage.getAllUser().get(id1).getFriends()) {
-            for (User user2: userStorage.getAllUser().get(id2).getFriends()) {
-                if (user1.getId() == user2.getId()) {
-                    generalFriend.add(user1);
+    public ArrayList<User> generalFriend(int id1, int id2) {
+        ArrayList<User> generalFriend = new ArrayList<>();
+        if (userStorage.get(id1).getFriends() != null || userStorage.get(id2).getFriends() != null) {
+            for (int user1 : userStorage.get(id1).getFriends()) {
+                for (int user2 : userStorage.get(id2).getFriends()) {
+                    if (user1 == user2) {
+                        generalFriend.add(userStorage.get(user1));
+                    }
                 }
             }
         }
         return generalFriend;
     }
 
-    public Set<User> getFriend(int id) {
-        return userStorage.get(id).getFriends();
+    public List<User> getFriend(int id) {
+        List<User> listUser = new ArrayList<>();
+        if (userStorage.get(id).getFriends().size() != 0) {
+            for (int user: userStorage.get(id).getFriends()) {
+                listUser.add(userStorage.get(user));
+            }
+        }
+        return listUser;
     }
 }

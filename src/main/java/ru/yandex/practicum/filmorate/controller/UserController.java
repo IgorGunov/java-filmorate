@@ -13,6 +13,8 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -24,23 +26,26 @@ public class UserController {
     @Autowired private UserService userService;
 
     @GetMapping("/users")
-    public void getAll() {
-        userStorage.getAllUser();
+    public List<User> getAll() {
+        return userStorage.getAllUser();
     }
 
     @GetMapping("/users/{id}")
-    @ResponseBody
-    public void getOnId(@PathVariable int id) {
-        userStorage.get(id);
+    public User getOnId(@PathVariable int id) {
+        chekId(id);
+        return userStorage.get(id);
     }
 
     @GetMapping("/users/{id}/friends")
-    public Set<User> getFriendOnId(@PathVariable int id) {
+    public List<User> getFriendOnId(@PathVariable int id) {
+        chekId(id);
         return userService.getFriend(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public Set<User> generalFriend(@PathVariable int id, @PathVariable int otherId) {
+    public ArrayList<User> generalFriend(@PathVariable int id, @PathVariable int otherId) {
+        chekId(id);
+        chekId(otherId);
         return userService.generalFriend(id, otherId);
     }
 
@@ -57,26 +62,25 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public User update(@Valid @RequestBody User user) throws ValidationException {
-        if (userStorage.getAllUser().containsKey(user.getId())) {
-            checkInput(user);
-            userStorage.put(user);
-            log.info("Добавлен обновлен");
-            return user;
-        } else {
-            log.info("нет пользователя с таким id");
-            throw new UserNotFoundExaption("нет пользователя с таким id");
-        }
+    public User update(@Valid @RequestBody User user) throws ValidationException, UserNotFoundExaption {
+        chekId(user.getId());
+        userStorage.put(user);
+        log.info("Добавлен обновлен");
+        return user;
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable int id, @PathVariable int friendId) {
-        userService.addFriend(id, friendId);
+    public User addFriend(@PathVariable int id, @PathVariable int friendId) {
+        chekId(id);
+        chekId(friendId);
+        return userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable int id, @PathVariable int friendId) {
-        userService.deleteFriend(id, friendId);
+    public User deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+        chekId(id);
+        chekId(friendId);
+        return userService.deleteFriend(id, friendId);
     }
 
     private void checkInput(User user) throws ValidationException {
@@ -86,6 +90,12 @@ public class UserController {
         } else if (user.getLogin().contains(" ")) {
             log.warn("Логин содержит пробел");
             throw new ValidationException("Логин содержит пробел");
+        }
+    }
+
+    private void chekId(int id) {
+        if (userStorage.get(id) == null) {
+            throw new UserNotFoundExaption("нет юзера с таким ид");
         }
     }
 

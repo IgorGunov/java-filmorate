@@ -11,32 +11,24 @@ import java.util.Set;
 @Builder
 public class User {
     private static int idCounter = 1;
-    private static int id;
+    private int id;
     @Email
     private final String email;
     @NotBlank
     private final String login;
     private String name;
     private final LocalDate birthday;
-    private Set<User> friends;
+    private Set<Integer> friends;
 
     public void setId(){
         id = idCounter++;
     }
 
-    public int getId(){
-        return id;
-    }
-
-    public Set<User> getFriends() {
-        return friends;
-    }
-
-    public void addFriends(User friend) {
+    public void addFriends(int friend) {
         friends.add(friend);
     }
 
-    public void deleteFriend(User friend) {
+    public void deleteFriend(int friend) {
         friends.remove(friend);
     }
 }
