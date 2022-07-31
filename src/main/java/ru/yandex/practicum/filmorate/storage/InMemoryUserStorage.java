@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 public class InMemoryUserStorage implements UserStorage{
 
-    private final Map<Integer, User> users = new HashMap<>();
+    private final Map<Long, User> users = new HashMap<>();
 
     @Override
     public List<User> getAllUser() {
@@ -24,7 +24,7 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     @Override
-    public User get(int id) {
+    public User get(Long id) {
         for (User user: getAllUser()) {
             if (user.getId() == id) {
                 return user;

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Builder;
 import lombok.Data;
 import javax.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import java.util.Set;
 
 @Data
 @Builder
+@JsonDeserialize(using = FilmDeserializer.class)
 public class Film {
     private static int idCounter = 1;
     private int id;
@@ -18,17 +20,9 @@ public class Film {
     private final String description;
     private final LocalDate releaseDate;
     private final int duration;
-    private Set<Integer> likes;
+    private Set<Long> likes;
 
-    public void addLikes(int userId) {
-        likes.add(userId);
-    }
-
-    public void deleteLikes(int useId) {
-        likes.remove(useId);
-    }
-
-    public void setId(){
+    public void setId() {
         id = idCounter++;
     }
 }

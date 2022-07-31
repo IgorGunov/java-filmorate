@@ -22,8 +22,14 @@ import java.util.Set;
 @Component
 public class UserController {
 
-    @Autowired private UserStorage userStorage;
-    @Autowired private UserService userService;
+    private UserStorage userStorage;
+    private UserService userService;
+
+    @Autowired
+    public UserController(UserStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
+        this.userService = userService;
+    }
 
     @GetMapping("/users")
     public List<User> getAll() {
@@ -31,19 +37,19 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getOnId(@PathVariable int id) {
+    public User getOnId(@PathVariable Long id) {
         chekId(id);
         return userStorage.get(id);
     }
 
     @GetMapping("/users/{id}/friends")
-    public List<User> getFriendOnId(@PathVariable int id) {
+    public List<User> getFriendOnId(@PathVariable Long id) {
         chekId(id);
         return userService.getFriend(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public ArrayList<User> generalFriend(@PathVariable int id, @PathVariable int otherId) {
+    public ArrayList<User> generalFriend(@PathVariable Long id, @PathVariable Long otherId) {
         chekId(id);
         chekId(otherId);
         return userService.generalFriend(id, otherId);
@@ -70,14 +76,14 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}/friends/{friendId}")
-    public User addFriend(@PathVariable int id, @PathVariable int friendId) {
+    public User addFriend(@PathVariable Long id, @PathVariable Long friendId) {
         chekId(id);
         chekId(friendId);
         return userService.addFriend(id, friendId);
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public User deleteFriend(@PathVariable int id, @PathVariable int friendId) {
+    public User deleteFriend(@PathVariable Long id, @PathVariable Long friendId) {
         chekId(id);
         chekId(friendId);
         return userService.deleteFriend(id, friendId);
@@ -93,7 +99,7 @@ public class UserController {
         }
     }
 
-    private void chekId(int id) {
+    private void chekId(Long id) {
         if (userStorage.get(id) == null) {
             throw new UserNotFoundExaption("нет юзера с таким ид");
         }

@@ -10,25 +10,17 @@ import java.util.Set;
 @Data
 @Builder
 public class User {
-    private static int idCounter = 1;
-    private int id;
+    private static Long idCounter = 1L;
+    private Long id;
     @Email
     private final String email;
     @NotBlank
     private final String login;
     private String name;
     private final LocalDate birthday;
-    private Set<Integer> friends;
+    private Set<Long> friends;
 
     public void setId(){
         id = idCounter++;
-    }
-
-    public void addFriends(int friend) {
-        friends.add(friend);
-    }
-
-    public void deleteFriend(int friend) {
-        friends.remove(friend);
     }
 }
