@@ -20,7 +20,7 @@ public class FilmService {
 
     public Film addLike(int filmId, Long user) {
         Film film = filmStorage.get(filmId);
-        Set<Long> likes = filmStorage.get(filmId).getLikes();
+        Set<Long> likes = new HashSet<>(filmStorage.get(filmId).getLikes());
         likes.add(user);
         film.setLikes(likes);
         filmStorage.update(film);
