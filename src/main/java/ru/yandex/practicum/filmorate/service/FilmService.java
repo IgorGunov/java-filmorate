@@ -21,13 +21,8 @@ public class FilmService {
     public Film addLike(int filmId, Long user) {
         Film film = filmStorage.get(filmId);
         Set<Long> likes = filmStorage.get(filmId).getLikes();
-        System.out.println(film);
-        System.out.println(likes);
         likes.add(user);
-        System.out.println(film);
-        System.out.println(likes);
         film.setLikes(likes);
-        System.out.println(film);
         filmStorage.update(film);
         return film;
     }
